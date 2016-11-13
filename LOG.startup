@@ -1,0 +1,14 @@
+#!/bin/sh
+LOG_FILE="/tmp/FreeWiFi_LOG.log"
+sleep 20
+rm $LOG_FILE
+touch $LOG_FIL
+echo "FreeWiFi LOG server using simple netcat" >> $LOG_FILE
+echo "Author: Sebastijan Bandur, seba.bandur@gmail.com" >> $LOG_FILE
+echo "Server started: $(date)" >> $LOG_FILE
+echo "---------------------------------------" >> $LOG_FILE
+
+while true ;
+do
+{ echo -ne "HTTP/1.0 200 OK\r\nContent-Length: $(wc -c < $LOG_FILE)\r\n\r\n"; cat $LOG_FILE; } | nc -l -p 6666;
+done  
