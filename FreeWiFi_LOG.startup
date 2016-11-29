@@ -10,5 +10,5 @@ echo "---------------------------------------" >> $LOG_FILE
 
 while true ;
 do
-{ echo -ne "HTTP/1.0 200 OK\r\nContent-Length: $(wc -c < $LOG_FILE)\r\n\r\n"; cat $LOG_FILE; } | nc -l -p 6666;
+{ echo -ne "HTTP/1.0 200 OK\r\nContent-Length: $(wc -c < $LOG_FILE)\r\n\r\n"; cat $LOG_FILE; } | nc -l -p 88;
 done  
