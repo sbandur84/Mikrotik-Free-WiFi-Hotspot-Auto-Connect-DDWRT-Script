@@ -5,13 +5,14 @@
 HOTSPOT_URL="http://FREE-WIFI.COM"
 # INPUT YOUR WLAN MAC ADDRESS INSTEAD OF X-s!
 USERNAME="T-XX%3AXX%3AXX%3AXX%3AXX%3AXX"
+# ============================================================================================
+
+# ADVANCED CONFIGURATION =====================================================================
 # PATH FOR LOG FILE STORAGE
 LOG_FILE="/tmp/FreeWiFi_LOG.log"
 # ENABLE LOG FILE 1/0 = on/off
 LOG=1
-# ============================================================================================
-
-# ADVANCED CONFIGURATION =====================================================================
+# LEAVE EVERYTHING ELSE AS IS!!
 MAIN_SLEEP=60
 BOOT_SLEEP=30
 LOGOUT_WHEN_LEFT_S=$(($MAIN_SLEEP+5))
