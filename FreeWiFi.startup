@@ -7,10 +7,11 @@ HOTSPOT_URL="http://FREE-WIFI.COM"
 USERNAME="T-XX%3AXX%3AXX%3AXX%3AXX%3AXX"
 # PATH FOR LOG FILE STORAGE
 LOG_FILE="/tmp/FreeWiFi_LOG.log"
+# ENABLE LOG FILE 1/0 = on/off
+LOG=1
 # ============================================================================================
 
 # ADVANCED CONFIGURATION =====================================================================
-GET_TIME_PAUSE=0
 MAIN_SLEEP=60
 BOOT_SLEEP=30
 LOGOUT_WHEN_LEFT_S=$(($MAIN_SLEEP+5))
@@ -28,7 +29,12 @@ STATUS_URL="$HOTSPOT_URL/status"
 
 
 #before first login sleep for 60s
-echo "$(date), BOOT OK. Waiting $BOOT_SLEEP seconds." >> $LOG_FILE
+if [ $LOG -eq 1]
+then
+	echo "$(date), BOOT OK. Waiting $BOOT_SLEEP seconds." >> $LOG_FILE
+fi
+
+
 sleep $BOOT_SLEEP
 
 LOGIN_NR=1
@@ -42,10 +48,20 @@ do
 #LOGIN
 	CONN_STATUS=0
 	R=1
-	echo -n "$(date), Connecting ... " >> $LOG_FILE
+	
+	if [ $LOG -eq 1]
+	then
+		echo -n "$(date), Connecting ... " >> $LOG_FILE
+	fi
+	
+	
 	while [ $CONN_STATUS -eq 0 ]
 	do
-		echo -n "$R " >> $LOG_FILE
+		if [ $LOG -eq 1]
+		then
+			echo -n "$R " >> $LOG_FILE
+		fi
+		
 		CONN_STATUS=$(wget -T 2 -q -O - "$@" "$LOGIN_URL" | grep -c "You are logged in")
 		if [ $CONN_STATUS -eq 0 ]
 		then
@@ -53,22 +69,37 @@ do
 		fi
 		R=$((R+1))
 	done
-	echo "OK: $(date +%H:%M:%S)" >> $LOG_FILE
+	if [ $LOG -eq 1]
+	then
+		echo "OK: $(date +%H:%M:%S)" >> $LOG_FILE
+	fi
 #AQUIRE TIME LEFT
 	
 	#WAIT FOR NTP SERVER
 	TIME_NOW=$(date +%s)
 	if [ $TIME_NOW -lt 300 ]
 	then
- 		echo -n "$(date), NTP Time ... " >> $LOG_FILE
- 		NTP=1
+		if [ $LOG -eq 1]
+		then
+ 			echo -n "$(date), NTP Time ... " >> $LOG_FILE
+ 		fi
+		
+		NTP=1
  		while true                                 
-		do                                                                      
-			echo -n "$NTP " >> $LOG_FILE
+		do
+			if [ $LOG -eq 1]
+			then
+				echo -n "$NTP " >> $LOG_FILE
+			fi
+			
 			SEC=$(date +%s)                                                         
 			if [ $SEC -gt 300 ]
 			then
-				echo "OK: $(date +%H:%M:%S)" >> $LOG_FILE
+				if [ $LOG -eq 1]
+				then
+					echo "OK: $(date +%H:%M:%S)" >> $LOG_FILE
+				fi
+				
 				break
 			fi
 			NTP=$((NTP+1))
@@ -76,20 +107,34 @@ do
 		done
 	fi
 	WHOLE_START=$(date +%s)
-	echo -n "$(date), Login time ... " >> $LOG_FILE
+	
+	if [ $LOG -eq 1]
+	then
+		echo -n "$(date), Login time ... " >> $LOG_FILE
+	fi
+	
+	
 	I=1
 	T=0
 	TIME_OK=0
 	while [ $TIME_OK -eq 0 ]
 	do
-		echo -n "$I " >> $LOG_FILE
+		if [ $LOG -eq 1]
+		then
+			echo -n "$I " >> $LOG_FILE
+		fi
+		
 		STATUS_PAGE=$(wget -T 2 -q -O - "$@" "$STATUS_URL")
 		STA=$?
-#		sleep $GET_TIME_PAUSE
+
 
 		if [ "$STATUS_PAGE" = "" ]
 		then
-			echo -n  "PAGE_ERR " >> $LOG_FILE
+			if [ $LOG -eq 1]
+			then
+				echo -n  "PAGE_ERR " >> $LOG_FILE
+			fi
+			
 			sleep 1
 			I=$((I+1))
 			continue
@@ -99,7 +144,11 @@ do
 
 		if [ "$MINUTES" = "" ]
 		then
-			echo -n "TIME_ERR " >> $LOG_FILE             
+			if [ $LOG -eq 1]
+			then
+				echo -n "TIME_ERR " >> $LOG_FILE
+			fi
+			
 			sleep 1
 			I=$((I+1))
 			continue
@@ -110,20 +159,31 @@ do
 		if [ $T -gt 0 ]
 		then
 			TIME_OK=1
-			echo "OK: $MINUTES minutes left." >> $LOG_FILE
+			
+			if [ $LOG -eq 1]
+			then
+				echo "OK: $MINUTES minutes left." >> $LOG_FILE
+			fi
+			
 			I=$((I+1))
 			break
 		fi
 		if [ $I -gt $AQUIRE_TIME_RETRY ]
 		then
-			echo "FAIL. Restarting script ..." >> $LOG_FILE
+			if [ $LOG -eq 1]
+			then
+				echo "FAIL. Restarting script ..." >> $LOG_FILE
+			fi
 			TIME_OK=1
 			sleep 1
 			continue 1
 		fi
 		I=$((I+1))
 	done
-        echo "1...5....10...15...20...25...30...35...40...45...50...55...60" >> $LOG_FILE
+	if [ $LOG -eq 1]
+	then
+        	echo "1...5....10...15...20...25...30...35...40...45...50...55...60" >> $LOG_FILE
+	fi
 #WAIT PERIOD
 	#CALC TIME	
 	S=$(($T*60))
@@ -141,10 +201,16 @@ do
 		then
 			
 			PING=0
-			echo -n "-" >> $LOG_FILE
+			if [ $LOG -eq 1]
+			then
+				echo -n "-" >> $LOG_FILE
+			fi
 		else
 			PING=1
-			echo -n "+" >> $LOG_FILE
+			if [ $LOG -eq 1]
+			then
+				echo -n "+" >> $LOG_FILE
+			fi
 		fi
 		sleep $MAIN_SLEEP
 		#CALC TIME
@@ -154,7 +220,11 @@ do
 	done
 	echo "|" >> $LOG_FILE
 #LOGOUT
-	echo "$(date), Connection finished ..." >> $LOG_FILE
+	if [ $LOG -eq 1]
+	then
+		echo "$(date), Connection finished ..." >> $LOG_FILE
+	fi
+	
 	OUT=$(wget -T 2 -q -O - "$@"  $LOGOUT)
 	LOGIN_NR=$(($LOGIN_NR+1))
 done
