@@ -1,7 +1,8 @@
-# Mikrotik Free WiFi Hotspot Auto Connect DDWRT Script     
+# Mikrotik Free WiFi Hotspot Auto Connect DD-WRT Script     
 Auto connect and reconnect to Mikrotik free WiFi hotspot.     
 
-Intendet for DD-WRT      
+Intendet for DD-WRT!
+
 Supported OS: Linux, MacOS, Unix, Windows 10 AE or other sh – shell capable system.     
 
 ## DD-WRT user guide:     
