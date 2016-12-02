@@ -1,16 +1,29 @@
 #!/bin/sh
-LOGIN_ROUTER="http://starse.wifipoint.net/login?username=T-C8%3AB3%3A73%3A3B%3A45%3AD3"
-LOGOUT="http://starse.wifipoint.net/logout"
-LOGIN="http://starse.wifipoint.net/login"
-USER=$ROUTER_USER
-STATUS_URL="http://starse.wifipoint.net/status"
-LOGIN_URL=$LOGIN_ROUTER
+
+# BASIC CONFIGURATION ========================================================================
+# HOTSPOT'S LOGIN WEBPAGE URL
+HOTSPOT_URL="http://FREE-WIFI.COM"
+# INPUT YOUR WLAN MAC ADDRESS INSTEAD OF X-s!
+USERNAME="T-XX%3AXX%3AXX%3AXX%3AXX%3AXX"
+# PATH FOR LOG FILE STORAGE
+LOG_FILE="/tmp/FreeWiFi_LOG.log"
+# ============================================================================================
+
+# ADVANCED CONFIGURATION =====================================================================
 GET_TIME_PAUSE=0
 MAIN_SLEEP=60
 BOOT_SLEEP=30
 LOGOUT_WHEN_LEFT_S=$(($MAIN_SLEEP+5))
 AQUIRE_TIME_RETRY=10
-LOG_FILE="/tmp/FreeWiFi_LOG.log"
+# ============================================================================================
+
+# STATIC VAR ALLOC ===========================================================================
+LOGIN_URL="$HOTSPOT_URL/login?username=$USERNAME"
+LOGOUT="$HOTSPOT_URL/logout"
+LOGIN="$HOTSPOT_URL/login"
+STATUS_URL="$HOTSPOT_URL/status"
+# ============================================================================================
+
 
 
 
